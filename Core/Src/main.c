@@ -58,7 +58,7 @@ int32_t DiffTime[CAPTURENUM-1] = { 0 };
 //Mean difftime
 float MeanTime =0;
 uint16_t RPM=0;
-
+uint16_t RPM2=0;
 
 //for microsecond measurement
 uint64_t _micros =0;
@@ -395,13 +395,14 @@ void encoderSpeedReaderCycle() {
 
 	//mean all 15 Diff
 	MeanTime =sum / (float)(CAPTURENUM-1);
-	RPM=(12/MeanTime)*(1.0/1*1000000.0)*(60.0/1.0)*(1.0/12.0)*(1.0/64.0);
+	RPM=(60.0*1000000.0/12.0)*(1.0/64.0)*(1.0/MeanTime);
+	RPM2=(1/MeanTime)*(1.0*1000000.0/1.0)*(60.0/1.0)*(1.0/12.0)*(1.0/64.0);
 }
 uint64_t micros()
 {
-	return _micros + htim5.Instance->CNT;
+	return _micros + htim5.Instance->CNT;//เวลาปัจจุบัน
 }
-
+//interupt
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
  if(htim == &htim5)
